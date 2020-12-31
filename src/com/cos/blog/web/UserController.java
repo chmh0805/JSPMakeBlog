@@ -27,7 +27,7 @@ public class UserController extends HttpServlet {
 		String cmd = request.getParameter("cmd");
 		
 		if (cmd.equals("loginForm")) {
-			// 서비스 호출
+			response.sendRedirect("user/loginForm.jsp");
 		} else if (cmd.equals("login")) {
 			// 서비스 호출
 		}
