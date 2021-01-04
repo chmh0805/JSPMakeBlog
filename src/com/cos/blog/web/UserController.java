@@ -63,7 +63,7 @@ public class UserController extends HttpServlet {
 			if (result == 1) {
 				response.sendRedirect("index.jsp");
 			} else {
-				Script.back(request, response);
+				Script.back(response, "회원가입 실패");
 			}
 		}
 	}
