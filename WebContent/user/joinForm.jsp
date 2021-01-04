@@ -3,22 +3,22 @@
     
 <%@ include file="../layout/header.jsp"%>
 
-<div>
-	<form action="/action_page.php">
+<div class="container">
+	<form action="/blog/user?cmd=join" method="post">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter Username" />
+			<input type="text" name="username" class="form-control" placeholder="Enter Username"  required/>
 		</div>
 
 		<div class="form-group">
-			<input type="password" class="form-control" placeholder="Enter Password" />
+			<input type="password" name="password" class="form-control" placeholder="Enter Password" required/>
 		</div>
 
 		<div class="form-group">
-			<input type="email" class="form-control" placeholder="Enter Email" />
+			<input type="email" name="email" class="form-control" placeholder="Enter Email" required/>
 		</div>
 	
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter Address" />
+			<input type="text" name="address" class="form-control" placeholder="Enter Address" required/>
 		</div>
 		<br/>
 		<button type="submit" class="btn btn-primary">회원가입완료</button>
