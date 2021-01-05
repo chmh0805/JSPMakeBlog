@@ -21,8 +21,7 @@ public class UserService {
 	}
 	
 	public User 로그인(LoginReqDto dto) {
-		
-		return null;
+		return userDao.findByUsernameAndPassword(dto);
 	}
 	
 	public int 회원수정(UpdateReqDto dto) {
@@ -31,7 +30,7 @@ public class UserService {
 	}
 	
 	public int 아이디중복체크(String username) {
-		
-		return -1;
+		int result = userDao.usernameCheck(username);
+		return result;
 	}
 }
