@@ -19,13 +19,15 @@
 	<div class="progress col-md-12 m-2">
 		<div class="progress-bar" style="width: 70%"></div>
 	</div>
-
+	
+	<c:forEach var="board" items="${boardList }" >
 		<div class="card col-md-12 m-2">
 			<div class="card-body">
-				<h4 class="card-title">제목</h4>
+				<h4 class="card-title">${board.title }</h4>
 				<a href="#" class="btn btn-primary">상세보기</a>
 			</div>
 		</div>
+	</c:forEach>
 
 	<br />
 	<ul class="pagination justify-content-center">

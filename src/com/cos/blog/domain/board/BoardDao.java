@@ -2,6 +2,9 @@ package com.cos.blog.domain.board;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.cos.blog.config.DB;
 import com.cos.blog.domain.board.dto.SaveReqDto;
@@ -26,5 +29,34 @@ public class BoardDao {
 			DB.close(conn, pstmt);
 		}
 		return -1;
+	}
+	
+	public List<Board> findAll() {
+		List<Board> tempBoardList = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board";
+		Connection conn = DB.getConnection();
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Board tempBoard = Board.builder()
+						.id(rs.getInt("id"))
+						.userId(rs.getInt("userId"))
+						.title(rs.getString("title"))
+						.content(rs.getString("content"))
+						.readCount(rs.getInt("readCount"))
+						.createDate(rs.getTimestamp("createDate"))
+						.build();
+				tempBoardList.add(tempBoard);
+			}
+			return tempBoardList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt);
+		}
+		return null;
 	}
 }
