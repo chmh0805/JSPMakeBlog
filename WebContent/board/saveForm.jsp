@@ -4,8 +4,8 @@
 <%@ include file="../layout/header.jsp" %>
 
 <div class="container">
-	<form action="#" method="POST">
-	
+	<form action="/blog/board?cmd=save" method="POST">
+		<input type="hidden" name="userId" value="${sessionScope.principal.id }" />
 		<div class="form-group">
 			<label for="title">Title:</label>
 			<input type="text" class="form-control" placeholder="title" id="title" name="title">
