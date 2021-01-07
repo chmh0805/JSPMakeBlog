@@ -36,14 +36,15 @@ public class BoardController extends HttpServlet {
 	protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String cmd = request.getParameter("cmd");
 		BoardService boardService = new BoardService();
+		RequestDispatcher dis = null;
 		
 		HttpSession session = request.getSession();
 		if (cmd.equals("saveForm")) {
 			User principal = (User) session.getAttribute("principal");
 			if (principal != null) {
-				response.sendRedirect("board/saveForm.jsp");
+				dis = request.getRequestDispatcher("board/saveForm.jsp");
 			} else {
-				response.sendRedirect("user/loginForm.jsp");
+				dis = request.getRequestDispatcher("user/loginForm.jsp");
 			}
 			
 		} else if (cmd.equals("save")) {
@@ -59,7 +60,7 @@ public class BoardController extends HttpServlet {
 			
 			int result = boardService.글쓰기(dto);
 			if (result == 1) { // 정상
-				response.sendRedirect("index.jsp");
+				dis = request.getRequestDispatcher("index.jsp");
 			} else {
 				Script.back(response, "글쓰기 실패");
 			}
@@ -67,8 +68,15 @@ public class BoardController extends HttpServlet {
 		} else if (cmd.equals("list")) {
 			List<Board> boards = boardService.목록보기();
 			request.setAttribute("boardList", boards);
-			RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
-			dis.forward(request, response);
+			dis = request.getRequestDispatcher("board/list.jsp");
+			
+		} else if (cmd.equals("detail")) {
+			int boardId = Integer.parseInt(request.getParameter("boardId"));
+			Board board = boardService.상세보기(boardId);
+			request.setAttribute("board", board);
+			dis = request.getRequestDispatcher("board/openDetail.jsp");
 		}
+		
+		dis.forward(request, response);
 	}
 }

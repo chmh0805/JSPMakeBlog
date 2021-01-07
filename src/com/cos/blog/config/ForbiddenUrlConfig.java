@@ -19,13 +19,11 @@ public class ForbiddenUrlConfig implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		
-		StringBuffer url = request.getRequestURL();
-		String path = url.substring(url.length()-4);
-		
-		if (path.equals(".jsp")) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-		} else {
+		if (request.getRequestURI().equals("/blog/")) {
 			chain.doFilter(request, response);
+		} else {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 		}
+		
 	}
 }

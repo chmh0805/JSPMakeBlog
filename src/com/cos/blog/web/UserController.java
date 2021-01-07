@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,10 +37,11 @@ public class UserController extends HttpServlet {
 	protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String cmd = request.getParameter("cmd");
 		UserService userService = new UserService();
+		RequestDispatcher dis = null;
 		
 		if (cmd.equals("loginForm")) {
-			response.sendRedirect("user/loginForm.jsp");
-			
+			dis = request.getRequestDispatcher("user/loginForm.jsp");
+
 		} else if (cmd.equals("login")) {
 			// 서비스 호출
 			String username = request.getParameter("username");
@@ -52,13 +54,13 @@ public class UserController extends HttpServlet {
 			if (userEntity != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("principal", userEntity);
-				response.sendRedirect("index.jsp");
+				dis = request.getRequestDispatcher("index.jsp");
 			} else {
 				Script.back(response, "로그인 실패");
 			}
 			
 		} else if (cmd.equals("joinForm")) {
-			response.sendRedirect("user/joinForm.jsp");
+			dis = request.getRequestDispatcher("user/joinForm.jsp");
 			
 		} else if (cmd.equals("join")) {
 			// 서비스 호출
@@ -74,7 +76,7 @@ public class UserController extends HttpServlet {
 			System.out.println("회원가입 : " + dto);
 			int result = userService.회원가입(dto);
 			if (result == 1) {
-				response.sendRedirect("index.jsp");
+				dis = request.getRequestDispatcher("index.jsp");
 			} else {
 				Script.back(response, "회원가입 실패");
 			}
@@ -90,10 +92,13 @@ public class UserController extends HttpServlet {
 				out.print("no");
 			}
 			out.flush();
+			
 		} else if (cmd.equals("logout")) {
 			HttpSession session = request.getSession();
 			session.invalidate();
-			response.sendRedirect("index.jsp");
+			dis = request.getRequestDispatcher("index.jsp");
 		}
+		
+		dis.forward(request, response);
 	}
 }

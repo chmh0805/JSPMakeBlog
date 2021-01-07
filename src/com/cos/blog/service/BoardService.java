@@ -20,4 +20,8 @@ public class BoardService {
 	public List<Board> 목록보기() {
 		return boardDao.findAll();
 	}
+	
+	public Board 상세보기(int boardId) {
+		return boardDao.findById(boardId);
+	}
 }

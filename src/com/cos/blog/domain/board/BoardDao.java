@@ -11,6 +11,35 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
 	
+	public Board findById(int boardId) {
+		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardId);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				Board board = Board.builder()
+						.id(rs.getInt("id"))
+						.userId(rs.getInt("userId"))
+						.title(rs.getString("title"))
+						.content(rs.getString("content"))
+						.readCount(rs.getInt("readCount"))
+						.createDate(rs.getTimestamp("createDate"))
+						.build();
+				return board;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt, rs);
+		}
+		return null;
+	}
+	
 	public int save(SaveReqDto dto) {
 		String sql = "INSERT INTO board(userId, title, content, createDate) VALUES (?, ?, ?, now())";
 		Connection conn = DB.getConnection();
@@ -34,12 +63,13 @@ public class BoardDao {
 	public List<Board> findAll() {
 		List<Board> tempBoardList = new ArrayList<>();
 		PreparedStatement pstmt = null;
-		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board";
+		ResultSet rs = null;
+		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board ORDER BY id DESC";
 		Connection conn = DB.getConnection();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Board tempBoard = Board.builder()
 						.id(rs.getInt("id"))
@@ -55,7 +85,7 @@ public class BoardDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DB.close(conn, pstmt);
+			DB.close(conn, pstmt, rs);
 		}
 		return null;
 	}
