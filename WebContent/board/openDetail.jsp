@@ -6,6 +6,7 @@
 <div class="container">
 
 	<c:if test="${sessionScope.principal.id == board.userId }">
+		<a href="/blog/board?cmd=updateForm&boardId=${board.id }" class="btn btn-warning">수정</a>
 		<button class="btn btn-danger" onclick="deleteById(${board.id})">삭제</button>
 	</c:if>
 
@@ -76,12 +77,10 @@
 		
 		$.ajax({
 			type: "POST",
-			url: "/blog/board?cmd=delete",
-			data: JSON.stringify(data),
-			contentType: "application/json; charset=utf-8",
+			url: "/blog/board?cmd=delete&boardId="+boardId,
 			dataType: "json"
 		}).done((result)=>{
-			if(result.status === "ok"){
+			if(result.statusCode == 1){
 				alert('삭제되었습니다.');
 				location.href="/blog/";
 			} else {

@@ -6,6 +6,7 @@ import com.cos.blog.domain.board.Board;
 import com.cos.blog.domain.board.BoardDao;
 import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
+import com.cos.blog.domain.board.dto.UpdateReqDto;
 
 public class BoardService {
 	private BoardDao boardDao;
@@ -33,5 +34,9 @@ public class BoardService {
 	
 	public int 게시물삭제(int boardId) {
 		return boardDao.deleteById(boardId);
+	}
+	
+	public int 게시물수정(UpdateReqDto dto) {
+		return boardDao.update(dto);
 	}
 }
