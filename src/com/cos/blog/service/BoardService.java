@@ -17,11 +17,15 @@ public class BoardService {
 		return boardDao.save(dto);
 	}
 	
-	public List<Board> 목록보기() {
-		return boardDao.findAll();
+	public List<Board> 목록보기(int page) {
+		return boardDao.findAll(page);
 	}
 	
 	public Board 상세보기(int boardId) {
 		return boardDao.findById(boardId);
+	}
+	
+	public int 게시물갯수세기() {
+		return boardDao.count();
 	}
 }
