@@ -53,9 +53,6 @@ public class BoardController extends HttpServlet {
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
 			
-			title = title.replaceAll("<", "&lt;");
-			title = title.replaceAll(">", "&gt;");
-			
 			SaveReqDto dto = SaveReqDto.builder()
 					.userId(userId)
 					.title(title)
