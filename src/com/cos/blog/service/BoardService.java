@@ -30,4 +30,8 @@ public class BoardService {
 	public int 게시물갯수세기() {
 		return boardDao.count();
 	}
+	
+	public int 게시물삭제(int boardId) {
+		return boardDao.deleteById(boardId);
+	}
 }

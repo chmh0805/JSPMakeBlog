@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class DetailRespDto {
 	private int id;
+	private int userId;
 	private String title;
 	private String content;
 	private int readCount;

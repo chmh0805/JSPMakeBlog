@@ -12,6 +12,24 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
 	
+	public int deleteById(int BoardId) {
+		String sql = "DELETE FROM board WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, BoardId);
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt);
+		}
+		return -1;
+	}
+	
 	public void updateReadCount(int boardId) {
 		String sql = "UPDATE board SET readCount = readCount+1 WHERE id = ?";
 		Connection conn = DB.getConnection();
@@ -30,7 +48,7 @@ public class BoardDao {
 	
 	public DetailRespDto findById(int boardId) {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("SELECT b.id, b.title, b.content, b.readCount, u.username ");
+		buffer.append("SELECT b.id, b.userId, b.title, b.content, b.readCount, u.username ");
 		buffer.append("FROM board b INNER JOIN user u ");
 		buffer.append("ON b.userId = u.id ");
 		buffer.append("WHERE b.id = ?");
@@ -47,6 +65,7 @@ public class BoardDao {
 			if (rs.next()) {
 				DetailRespDto dto = DetailRespDto.builder()
 						.id(rs.getInt("b.id"))
+						.userId(rs.getInt("b.userId"))
 						.title(rs.getString("b.title"))
 						.content(rs.getString("b.content"))
 						.readCount(rs.getInt("b.readCount"))

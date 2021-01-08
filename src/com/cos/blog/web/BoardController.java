@@ -1,6 +1,8 @@
 package com.cos.blog.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,11 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.cos.blog.domain.board.Board;
+import com.cos.blog.domain.board.dto.DeleteReqDto;
+import com.cos.blog.domain.board.dto.DeleteRespDto;
 import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
 import com.cos.blog.util.Script;
+import com.google.gson.Gson;
 
 @WebServlet("/board")
 public class BoardController extends HttpServlet {
@@ -82,6 +87,25 @@ public class BoardController extends HttpServlet {
 			DetailRespDto dto = boardService.상세보기(boardId);
 			request.setAttribute("board", dto);
 			dis = request.getRequestDispatcher("board/openDetail.jsp");
+			
+		} else if (cmd.equals("delete")) {
+			BufferedReader br = request.getReader();
+			String data = br.readLine();
+			
+			Gson gson = new Gson();
+			DeleteReqDto dto = gson.fromJson(data, DeleteReqDto.class);
+
+			int result = boardService.게시물삭제(dto.getBoardId());
+			DeleteRespDto respDto = new DeleteRespDto();
+			if (result == 1) {
+				respDto.setStatus("ok");
+			} else {
+				respDto.setStatus("fail");
+			}
+			PrintWriter out = response.getWriter();
+			out.print(gson.toJson(respDto));
+			out.flush();
+			return;
 		}
 		
 		dis.forward(request, response);

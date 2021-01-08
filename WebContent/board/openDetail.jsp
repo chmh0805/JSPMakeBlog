@@ -4,6 +4,11 @@
 <%@ include file="../layout/header.jsp" %>
 
 <div class="container">
+
+	<c:if test="${sessionScope.principal.id == board.userId }">
+		<button class="btn btn-danger" onclick="deleteById(${board.id})">삭제</button>
+	</c:if>
+
 	<br />
 	<br />
 	<h6 class="m-2">
@@ -61,6 +66,30 @@
 	</div>
 	<!-- 댓글 박스 끝 -->
 </div>
+
+<script>
+	function deleteById(boardId){
+		// ajax로 delete 요청 (Mehtod : POST), json형태로 !!
+		var data = {
+			boardId: boardId
+		};
+		
+		$.ajax({
+			type: "POST",
+			url: "/blog/board?cmd=delete",
+			data: JSON.stringify(data),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json"
+		}).done((result)=>{
+			if(result.status === "ok"){
+				alert('삭제되었습니다.');
+				location.href="/blog/";
+			} else {
+				alert('게시글 삭제를 실패하였습니다.');
+			}
+		});
+	}
+</script>
 
 </body>
 </html>
