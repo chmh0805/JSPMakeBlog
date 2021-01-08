@@ -7,12 +7,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cos.blog.config.DB;
+import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
 	
-	public Board findById(int boardId) {
-		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board WHERE id = ?";
+	public void updateReadCount(int boardId) {
+		String sql = "UPDATE board SET readCount = readCount+1 WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardId);
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt);
+		}
+	}
+	
+	public DetailRespDto findById(int boardId) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("SELECT b.id, b.title, b.content, b.readCount, u.username ");
+		buffer.append("FROM board b INNER JOIN user u ");
+		buffer.append("ON b.userId = u.id ");
+		buffer.append("WHERE b.id = ?");
+		
+		String sql = buffer.toString();
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -22,15 +45,14 @@ public class BoardDao {
 			pstmt.setInt(1, boardId);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				Board board = Board.builder()
-						.id(rs.getInt("id"))
-						.userId(rs.getInt("userId"))
-						.title(rs.getString("title"))
-						.content(rs.getString("content"))
-						.readCount(rs.getInt("readCount"))
-						.createDate(rs.getTimestamp("createDate"))
+				DetailRespDto dto = DetailRespDto.builder()
+						.id(rs.getInt("b.id"))
+						.title(rs.getString("b.title"))
+						.content(rs.getString("b.content"))
+						.readCount(rs.getInt("b.readCount"))
+						.username(rs.getString("u.username"))
 						.build();
-				return board;
+				return dto;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.cos.blog.domain.board.Board;
+import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
@@ -52,6 +53,9 @@ public class BoardController extends HttpServlet {
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
 			
+			title = title.replaceAll("<", "&lt;");
+			title = title.replaceAll(">", "&gt;");
+			
 			SaveReqDto dto = SaveReqDto.builder()
 					.userId(userId)
 					.title(title)
@@ -78,8 +82,8 @@ public class BoardController extends HttpServlet {
 			
 		} else if (cmd.equals("detail")) {
 			int boardId = Integer.parseInt(request.getParameter("boardId"));
-			Board board = boardService.상세보기(boardId);
-			request.setAttribute("board", board);
+			DetailRespDto dto = boardService.상세보기(boardId);
+			request.setAttribute("board", dto);
 			dis = request.getRequestDispatcher("board/openDetail.jsp");
 		}
 		
