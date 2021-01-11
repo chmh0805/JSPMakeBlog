@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import com.cos.blog.config.DB;
 import com.cos.blog.domain.user.dto.JoinReqDto;
 import com.cos.blog.domain.user.dto.LoginReqDto;
+import com.cos.blog.domain.user.dto.UpdateReqDto;
 
 public class UserDao {
 	
@@ -63,8 +64,24 @@ public class UserDao {
 		return -1;
 	}
 	
-	public void update() { // 회원정보 수정
-		
+	public int update(int userId, UpdateReqDto dto) { // 회원정보 수정
+		String sql = "UPDATE user SET password = ?, email = ?, address = ? WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getPassword());
+			pstmt.setString(2, dto.getEmail());
+			pstmt.setString(3, dto.getAddress());
+			pstmt.setInt(4, userId);
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt);
+		}
+		return -1; 
 	}
 	
 	public int usernameCheck(String username) { // 아이디 중복 체크

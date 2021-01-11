@@ -24,9 +24,8 @@ public class UserService {
 		return userDao.findByUsernameAndPassword(dto);
 	}
 	
-	public int 회원수정(UpdateReqDto dto) {
-		
-		return -1;
+	public int 회원수정(int userId, UpdateReqDto dto) {
+		return userDao.update(userId, dto);
 	}
 	
 	public int 아이디중복체크(String username) {

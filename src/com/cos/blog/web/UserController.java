@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.domain.user.dto.JoinReqDto;
 import com.cos.blog.domain.user.dto.LoginReqDto;
+import com.cos.blog.domain.user.dto.UpdateReqDto;
 import com.cos.blog.service.UserService;
 import com.cos.blog.util.Script;
 
@@ -100,6 +101,25 @@ public class UserController extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.invalidate();
 			dis = request.getRequestDispatcher("index.jsp");
+			
+		} else if (cmd.equals("updateForm")) {
+			dis = request.getRequestDispatcher("user/updateForm.jsp");
+			
+		} else if (cmd.equals("update")) {
+			int userId = Integer.parseInt(request.getParameter("userId"));
+			UpdateReqDto dto = UpdateReqDto.builder()
+					.password(request.getParameter("password"))
+					.email(request.getParameter("email"))
+					.address(request.getParameter("address"))
+					.build();
+			
+			int result = userService.회원수정(userId, dto);
+			
+			if (result == 1) {
+				dis = request.getRequestDispatcher("index.jsp");
+			} else {
+				Script.back(response, "회원정보 수정 실패");
+			}
 		}
 		
 		dis.forward(request, response);
