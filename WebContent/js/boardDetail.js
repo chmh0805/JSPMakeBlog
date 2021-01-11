@@ -41,8 +41,9 @@ function addReply(data) {
 	var replyList = $("#reply__list");
 	
 	var newLi = document.createElement("li");
-	newLi.id = "reply-"+data.replyId;
+	newLi.id = "reply-"+data.id;
 	newLi.className = "media";
+	newLi.setAttribute("userId", data.userId);
 	
 	var liDetail = `<div class="media-body">`;
 	liDetail += `<strong class="text-primary">${data.username}</strong>`;
@@ -57,5 +58,26 @@ function addReply(data) {
 }
 
 function deleteReply(replyId) {
+	var userId = $("#loginUserId").val();
+
+	var data = {
+		userId: userId,
+		replyId: replyId
+	};
+	
 	// 세션의 유저의 id와 reply의 userId를 비교해서 같을때만 !!
+		$.ajax({
+		type: "POST",
+		url: "/blog/reply?cmd=delete",
+		data: JSON.stringify(data),
+		contentType: "application/json; charset=utf-8",
+		dataType: "json"
+	}).done((result)=>{
+		if(result.statusCode == 1){
+			alert('삭제되었습니다.');
+			$("#reply-"+replyId).remove();
+		} else {
+			alert('댓글 삭제를 실패하였습니다.');
+		}
+	});
 }

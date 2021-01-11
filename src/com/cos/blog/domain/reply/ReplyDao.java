@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import com.cos.blog.config.DB;
+import com.cos.blog.domain.reply.dto.DeleteReqDto;
 import com.cos.blog.domain.reply.dto.SaveReqDto;
 import com.cos.blog.domain.reply.dto.SaveRespDto;
 
@@ -34,7 +35,7 @@ public class ReplyDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DB.close(conn, pstmt);
+			DB.close(conn, pstmt, rs);
 		}
 		return -1;
 	}
@@ -72,5 +73,25 @@ public class ReplyDao {
 			DB.close(conn, pstmt, rs);
 		}
 		return null;
+	}
+	
+	public int deleteById(DeleteReqDto dto) {
+		String sql = "DELETE FROM reply WHERE id = ? AND userId = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getReplyId());
+			pstmt.setInt(2, dto.getUserId());
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt);
+		}
+		
+		return -1;
 	}
 }

@@ -1,6 +1,7 @@
 package com.cos.blog.service;
 
 import com.cos.blog.domain.reply.ReplyDao;
+import com.cos.blog.domain.reply.dto.DeleteReqDto;
 import com.cos.blog.domain.reply.dto.SaveReqDto;
 import com.cos.blog.domain.reply.dto.SaveRespDto;
 
@@ -17,5 +18,9 @@ public class ReplyService {
 	
 	public SaveRespDto 댓글찾기(int replyId) {
 		return replyDao.findById(replyId);
+	}
+	
+	public int 댓글삭제(DeleteReqDto dto) {
+		return replyDao.deleteById(dto);
 	}
 }

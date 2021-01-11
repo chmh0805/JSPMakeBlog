@@ -3,6 +3,7 @@
 
 <%@ include file="../layout/header.jsp" %>
 
+<input type="hidden" id="loginUserId" value="${sessionScope.principal.id }" />
 <div class="container">
 
 	<c:if test="${sessionScope.principal.id == board.userId }">
