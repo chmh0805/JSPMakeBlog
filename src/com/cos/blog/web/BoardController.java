@@ -19,6 +19,7 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
+import com.cos.blog.util.Parse;
 import com.cos.blog.util.Script;
 import com.google.gson.Gson;
 
@@ -84,6 +85,8 @@ public class BoardController extends HttpServlet {
 		} else if (cmd.equals("detail")) {
 			int boardId = Integer.parseInt(request.getParameter("boardId"));
 			DetailRespDto dto = boardService.상세보기(boardId);
+			String content = Parse.makeYoutube(dto.getContent());
+			dto.setContent(content);
 			request.setAttribute("board", dto);
 			dis = request.getRequestDispatcher("board/openDetail.jsp");
 			
