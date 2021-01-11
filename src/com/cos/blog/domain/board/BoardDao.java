@@ -17,12 +17,13 @@ public class BoardDao {
 		List<Board> tempBoardList = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM board WHERE title LIKE ? ORDER BY id DESC LIMIT ?,4";
+		String sql = "SELECT * FROM board WHERE title LIKE ? OR content LIKE ? ORDER BY id DESC LIMIT ?,4";
 		Connection conn = DB.getConnection();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%"+keyword+"%");
+			pstmt.setString(2, "%"+keyword+"%");
 			pstmt.setInt(2, page*4);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
