@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.cos.blog.domain.board.dto.CommonRespDto;
 import com.cos.blog.domain.reply.dto.SaveReqDto;
+import com.cos.blog.domain.reply.dto.SaveRespDto;
 import com.cos.blog.service.ReplyService;
 import com.cos.blog.util.Script;
 import com.google.gson.Gson;
@@ -43,18 +44,23 @@ public class ReplyController extends HttpServlet {
 			BufferedReader br = request.getReader();
 			String reqData = br.readLine();
 			Gson gson = new Gson();
+			CommonRespDto<SaveRespDto> respDto = new CommonRespDto<>();
+			SaveRespDto saveRespDto = null;
 			
 			SaveReqDto dto = gson.fromJson(reqData, SaveReqDto.class);
+			int replyId = replyService.댓글쓰기(dto);
 			
-			int result = replyService.댓글쓰기(dto);
-
-			CommonRespDto<String> commonRespDto = new CommonRespDto<>();
-			commonRespDto.setStatusCode(result); // 1, -1
+			if (replyId != -1) { // 댓글쓰기 실패 시 -1이 리턴되기 때문
+				saveRespDto = replyService.댓글찾기(replyId);
+				respDto.setData(saveRespDto);
+				respDto.setStatusCode(1);
+			} else {
+				respDto.setStatusCode(-1);
+			}
 			
-			String responseData = gson.toJson(commonRespDto);
+			String responseData = gson.toJson(respDto);
 			Script.responseData(response, responseData);
 		}
-		
 		
 	}
 }
