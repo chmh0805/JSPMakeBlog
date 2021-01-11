@@ -1,5 +1,7 @@
 package com.cos.blog.service;
 
+import java.util.List;
+
 import com.cos.blog.domain.reply.ReplyDao;
 import com.cos.blog.domain.reply.dto.DeleteReqDto;
 import com.cos.blog.domain.reply.dto.SaveReqDto;
@@ -22,5 +24,9 @@ public class ReplyService {
 	
 	public int 댓글삭제(DeleteReqDto dto) {
 		return replyDao.deleteById(dto);
+	}
+	
+	public List<SaveRespDto> 댓글보기(int boardId) {
+		return replyDao.findAll(boardId);
 	}
 }

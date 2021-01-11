@@ -17,8 +17,10 @@ import com.cos.blog.domain.board.dto.CommonRespDto;
 import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
+import com.cos.blog.domain.reply.dto.SaveRespDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
+import com.cos.blog.service.ReplyService;
 import com.cos.blog.util.Parse;
 import com.cos.blog.util.Script;
 import com.google.gson.Gson;
@@ -42,6 +44,7 @@ public class BoardController extends HttpServlet {
 	protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String cmd = request.getParameter("cmd");
 		BoardService boardService = new BoardService();
+		ReplyService replyService = new ReplyService();
 		RequestDispatcher dis = null;
 		
 		HttpSession session = request.getSession();
@@ -81,15 +84,17 @@ public class BoardController extends HttpServlet {
 			request.setAttribute("boardList", boards);
 			request.setAttribute("currentPosition", currentPosition);
 			dis = request.getRequestDispatcher("board/list.jsp");
-			
+
 		} else if (cmd.equals("detail")) {
 			int boardId = Integer.parseInt(request.getParameter("boardId"));
+			List<SaveRespDto> replyList = replyService.댓글보기(boardId);
 			DetailRespDto dto = boardService.상세보기(boardId);
 			String content = Parse.makeYoutube(dto.getContent());
 			dto.setContent(content);
 			request.setAttribute("board", dto);
+			request.setAttribute("replyList", replyList);
 			dis = request.getRequestDispatcher("board/openDetail.jsp");
-			
+
 		} else if (cmd.equals("delete")) {
 			int boardId = Integer.parseInt(request.getParameter("boardId"));
 			int result = boardService.게시물삭제(boardId);

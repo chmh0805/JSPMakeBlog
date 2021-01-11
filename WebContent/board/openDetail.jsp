@@ -3,7 +3,7 @@
 
 <%@ include file="../layout/header.jsp" %>
 
-<input type="hidden" id="loginUserId" value="${sessionScope.principal.id }" />
+	<input type="hidden" id="loginUserId" value="${sessionScope.principal.id }" />
 <div class="container">
 
 	<c:if test="${sessionScope.principal.id == board.userId }">
@@ -46,11 +46,12 @@
 						<ul id="reply__list" class="media-list">
 						
 								<!-- 댓글 아이템 -->
-								<li id="reply-1" class="media">		
+							<c:forEach var="reply" items="${replyList }">
+								<li id="reply-${reply.id }" class="media">		
 									<div class="media-body">
-										<strong class="text-primary">홍길동</strong>
+										<strong class="text-primary">${reply.username }</strong>
 										<p>
-											댓글입니다.
+											${reply.content }
 										</p>
 									</div>
 									<div class="m-2">
@@ -59,6 +60,7 @@
 
 									</div>
 								</li>
+							</c:forEach>
 							
 						</ul>
 						<!-- 댓글 리스트 끝-->

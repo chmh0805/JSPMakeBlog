@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.cos.blog.config.DB;
 import com.cos.blog.domain.reply.dto.DeleteReqDto;
@@ -11,6 +13,43 @@ import com.cos.blog.domain.reply.dto.SaveReqDto;
 import com.cos.blog.domain.reply.dto.SaveRespDto;
 
 public class ReplyDao {
+	
+	public List<SaveRespDto> findAll(int boardId) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("SELECT r.id, r.userId, u.username, r.content, r.createDate ");
+		buffer.append("FROM reply r INNER JOIN user u ");
+		buffer.append("ON r.userId = u.id ");
+		buffer.append("WHERE r.boardId = ? ");
+		buffer.append("ORDER BY id DESC");
+		
+		String sql = buffer.toString();
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<SaveRespDto> replyList = new ArrayList<>();
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				SaveRespDto dto = SaveRespDto.builder()
+						.id(rs.getInt("r.id"))
+						.userId(rs.getInt("r.userId"))
+						.username(rs.getString("u.username"))
+						.content(rs.getString("r.content"))
+						.createDate(rs.getTimestamp("r.createDate"))
+						.build();
+				replyList.add(dto);
+			}
+			return replyList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt, rs);
+		}
+		return null;
+	}
 	
 	public int save(SaveReqDto dto) {
 		String sql = "INSERT INTO reply(userId, boardId, content, createDate) VALUES (?, ?, ?, now())";
