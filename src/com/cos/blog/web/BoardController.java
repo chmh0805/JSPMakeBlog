@@ -144,7 +144,7 @@ public class BoardController extends HttpServlet {
 			request.setAttribute("lastPage", lastPage);
 			request.setAttribute("boardList", boards);
 			request.setAttribute("currentPosition", currentPosition);
-			dis = request.getRequestDispatcher("board/search.jsp");
+			dis = request.getRequestDispatcher("board/list.jsp");
 			
 		}
 		

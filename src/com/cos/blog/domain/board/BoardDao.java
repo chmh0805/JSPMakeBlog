@@ -24,7 +24,7 @@ public class BoardDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%"+keyword+"%");
 			pstmt.setString(2, "%"+keyword+"%");
-			pstmt.setInt(2, page*4);
+			pstmt.setInt(3, page*4);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Board tempBoard = Board.builder()
