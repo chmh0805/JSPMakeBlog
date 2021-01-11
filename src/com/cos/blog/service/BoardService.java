@@ -32,6 +32,10 @@ public class BoardService {
 		return boardDao.count();
 	}
 	
+	public int 게시물갯수세기(String keyword) {
+		return boardDao.count(keyword);
+	}
+	
 	public int 게시물삭제(int boardId) {
 		return boardDao.deleteById(boardId);
 	}
@@ -39,4 +43,9 @@ public class BoardService {
 	public int 게시물수정(UpdateReqDto dto) {
 		return boardDao.update(dto);
 	}
+	
+	public List<Board> 키워드검색(String keyword, int page) {
+		return boardDao.findByKeyword(keyword, page);
+	}
+	
 }

@@ -33,9 +33,11 @@
 				<div class="panel panel-info">
 					<div class="panel-heading m-2"><b>Comment</b></div>
 					<div class="panel-body">
-						<textarea id="reply__write__form" class="form-control" placeholder="write a comment..." rows="2"></textarea>
+					
+						<textarea id="reply__write__form" name="content" class="form-control" placeholder="write a comment..." rows="2"></textarea>
 						<br>
-						<button onclick="#" class="btn btn-primary pull-right">댓글쓰기</button>
+						<button onclick="replySave(${sessionScope.principal.id }, ${board.id })" class="btn btn-primary pull-right">댓글쓰기</button>
+					
 						<div class="clearfix"></div>
 						<hr />
 						
@@ -87,6 +89,49 @@
 				alert('게시글 삭제를 실패하였습니다.');
 			}
 		});
+	}
+	
+	function replySave(userId, boardId) {
+		var data = {
+			userId: userId,
+			boardId: boardId,
+			content: $("#reply__write__form").val()
+		}
+		
+		$.ajax({
+			type: "post",
+			url: "/blog/reply?cmd=save",
+			data: JSON.stringify(data),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json"
+		}).done(function(result){
+			if (result.statusCode == 1) {
+				// $("#reply__list").prepend("<div>"+data.content+"</div>")
+				addReply(data.content);
+			} else {
+				alert("댓글 작성 실패");
+			}
+		})
+	};
+	
+	function addReply(content) {
+		var username = "${sessionScope.principal.username}";
+		var replyList = $("#reply__list");
+		
+		var newLi = document.createElement("li");
+		newLi.id = "reply-" + 5;
+		newLi.className = "media";
+		
+		var liDetail = `<div class="media-body">`;
+		liDetail += '<strong class="text-primary">'+username+'</strong>';
+		liDetail += '<p>'+content+'</p>';
+		liDetail += `</div>	<div class="m-2">`;
+		liDetail += `<i onclick="#" class="material-icons">delete</i>`
+		liDetail += `</div>`;
+		
+		newLi.innerHTML = liDetail;
+		
+		replyList.prepend(newLi);
 	}
 </script>
 

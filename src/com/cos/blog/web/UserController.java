@@ -57,6 +57,7 @@ public class UserController extends HttpServlet {
 				dis = request.getRequestDispatcher("index.jsp");
 			} else {
 				Script.back(response, "로그인 실패");
+				return;
 			}
 			
 		} else if (cmd.equals("joinForm")) {
@@ -79,6 +80,7 @@ public class UserController extends HttpServlet {
 				dis = request.getRequestDispatcher("index.jsp");
 			} else {
 				Script.back(response, "회원가입 실패");
+				return;
 			}
 			
 		} else if (cmd.equals("usernameCheck")) {
@@ -92,6 +94,7 @@ public class UserController extends HttpServlet {
 				out.print("no");
 			}
 			out.flush();
+			return;
 			
 		} else if (cmd.equals("logout")) {
 			HttpSession session = request.getSession();
